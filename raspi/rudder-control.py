@@ -18,18 +18,20 @@ GPIO.setup(servoPIN, GPIO.OUT)
 yaw = GPIO.PWM(servoPIN, 50)
 yaw.start()
 
-
+# kalkulasi PID sebelum masuk ke proses
 def interrupt_function():
     error = rudder_pid.update(yaw)
     yaw.ChangeDutyCycle(error/15)
 
-readings = []
+# looping sistem
+readings = [] # input pixel image processing
 initial_time = time.time
 try:
     while True:
         rudder_pid.setPoint(readings)
-        time.sleep(10)
+        time.sleep(0.25)
+
 # cleanup GPIO
 except KeyboardInterrupt:
-    p.stop()
+    yaw.stop()
     GPIO.cleanup()
